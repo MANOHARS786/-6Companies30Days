@@ -1,0 +1,223 @@
+1) COWS AND BULLS :-
+
+class Solution {
+    public String getHint(String secret, String guess) {
+        int n = secret.length();
+        int freq1[] = new int[10];
+        int freq2[] = new int[10];
+        Arrays.fill(freq1,0);
+         Arrays.fill(freq2,0);
+
+         int bull = 0;
+
+         for(int i=0;i<n;i++)
+         {
+             if(secret.charAt(i)==guess.charAt(i))
+             {
+                 bull++;
+             }
+             else
+             {
+                 freq1[secret.charAt(i) - '0']++;
+                  freq2[guess.charAt(i) - '0']++;
+             }
+
+         }
+
+         int cow = 0;
+
+         for(int i=0;i<10;i++)
+         {
+             cow+=Math.min(freq1[i],freq2[i]);
+         }
+
+         return bull+"A"+cow+"B";
+    }
+}
+
+2) EVALUATE REVERSE POLISH NOTATION :-
+
+class Solution {
+    public int evalRPN(String[] tokens) {
+        HashSet<String> al=new HashSet<String>();
+        al.add("+");
+        al.add("-");
+        al.add("*");
+        al.add("/");
+
+
+
+
+    Stack<String> st=new Stack<String>();
+    int ans=0;
+    for(int i=0;i<tokens.length;i++)
+    {
+       if(al.contains(tokens[i]))
+       {
+          
+          if(st.size()>1)
+          {
+               int second=Integer.parseInt(st.pop());
+            
+               int first=Integer.parseInt(st.pop());
+               
+
+               switch(tokens[i])
+               {
+                 case "+":
+                 ans= first+second;
+                 break;
+
+                 case "-":
+                 ans= first-second;
+                 break;
+                 case "*":
+                 ans=first* second;
+                 break;
+                 case "/":
+                 ans=first/second;
+                 break;
+  
+
+
+
+
+               }
+               st.push(String.valueOf(ans));
+          }
+       }
+
+     else 
+     {
+
+         st.push(tokens[i]);
+     }
+
+    }       
+
+if(!st.isEmpty())
+return Integer.parseInt(st.pop());
+       
+return ans;
+
+
+
+    
+
+
+
+
+    }
+}
+
+
+3)ROTATE FUNCTION :-
+
+class Solution {
+    public int maxRotateFunction(int[] nums) {
+        
+        int n = nums.length;
+        int dp[] = new int[n];
+        Arrays.fill(dp,0);
+
+        int sum  = 0;
+        for(int i=0;i<n;i++)
+        {
+            sum+=nums[i];
+
+            dp[0] = dp[0]+i*nums[i]; 
+        }
+        
+        int max = dp[0];
+        for(int i=1;i<n;i++)
+        {
+            dp[i] = sum-n*nums[n-i]+dp[i-1];
+            max = Math.max(dp[i],max);
+
+        }
+
+        return max;
+
+
+    }
+}
+
+
+4) NUMBER OF SUBSTRINGS CONTAINING ALL THREE CHARACTERS
+
+class Solution {
+    public int numberOfSubstrings(String s) {
+
+ int  n=s.length();      
+  int i=0;
+  int j=0;
+  int count=0;
+  int freq[]=new int[3];
+  for( j=0;j<n;j++)
+  {
+     freq[s.charAt(j)-'a']++;
+     while(freq[0]>0&& freq[1]>0&& freq[2]>0&& i<=j)
+     {
+       freq[s.charAt(i)-'a']--;
+         count=count+(n-j);   
+         i++;  
+     }
+
+
+
+
+  }
+return count;
+    }
+}
+
+
+5) LARGEST DIVISIBLE SUBSET
+
+class Solution {
+    public List<Integer> largestDivisibleSubset(int[] arr) {
+        int n=arr.length;
+    //step 1 sort the array
+    Arrays.sort(arr);
+// we have to create dp array
+int dp[]=new int[n];
+//initializing dp to 1
+Arrays.fill(dp,1);
+int max=1;
+// filling up the dp array
+for(int i=1;i<n;i++)
+{
+    for(int j=i-1;j>=0;j--)
+    {
+
+        if(arr[i]%arr[j]==0)
+        {
+
+            dp[i]=Math.max(dp[i],dp[j]+1);
+        }
+
+
+    }
+    max=Math.max(max,dp[i]);
+}
+
+List<Integer> al=new ArrayList<Integer>();
+int prev=0;
+for(int i=n-1;i>=0;i--)
+{
+   if(dp[i]==max&&prev%arr[i]==0 )
+   {  
+       al.add(arr[i]);
+       max=max-1;
+       prev=arr[i];
+
+
+   }
+
+
+}
+
+return  al;
+    }
+}
+
