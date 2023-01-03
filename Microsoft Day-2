@@ -1,1 +1,274 @@
+6) SCHEDULING A COURSE
+
+class Solution {
+    public boolean canFinish(int numCourses, int[][] prereq) {
+        ArrayList<ArrayList<Integer>> adj=new ArrayList<ArrayList<Integer>>();
+
+        for(int i=0;i<numCourses;i++)
+        {
+            adj.add(new ArrayList<Integer>());
+        }
+       
+       for(int i=0;i<prereq.length;i++)
+       {
+           for(int j=0;j<1;j++)
+           {
+               adj.get(prereq[i][1]).add(prereq[i][0]);
+           }
+       }
+
+      //checking cycle exist or not;
+      int V=numCourses;
+     int[] indegree=new int[V];
+     for(int i=0;i<adj.size();i++)
+     {
+         for(int j=0;j<adj.get(i).size();j++)
+         {
+             indegree[adj.get(i).get(j)]++;
+         }
+     }
+     Queue<Integer> q=new LinkedList<Integer>();
+     for(int i=0;i<indegree.length;i++)
+     {
+         if(indegree[i]==0)
+         {
+             q.add(i);
+         }
+     }
+     int count=0;
+     while(!q.isEmpty())
+     {
+         int k=q.poll();
+         count++;
+         for(int i:adj.get(k))
+         {
+             indegree[i]--;
+             if(indegree[i]==0)
+             q.add(i);
+         }
+     }
+
+
+
+return count==V;
+
+
+
+    }
+}
+
+
+7) HOW TO FIND A PERFECT RECTANGLE
+
+Perfect Rectangle
+
+class Solution {
+    public boolean isRectangleCover(int[][] rectangles) {
+
+    HashSet<String> h=new HashSet<String>();
+    int area=0;
+    int minx1=Integer.MAX_VALUE;
+    int miny1=Integer.MAX_VALUE;
+    int maxx2=Integer.MIN_VALUE;
+    int maxy2=Integer.MIN_VALUE;
+          String bottomleft=null;
+          String upperright=null;
+          String bottomright=null;
+          String upperleft=null;
+    for(int [] i: rectangles )
+    {
+            int x1=i[0];
+            int y1=i[1];
+            int x2=i[2];
+            int y2=i[3];
+            area+=Math.abs(x2-x1)*Math.abs(y2-y1);
+
+            minx1=Math.min(minx1,x1);
+            miny1=Math.min(miny1,y1);
+            maxx2=Math.max(maxx2,x2);
+            maxy2=Math.max(maxy2,y2);
+
+        bottomleft=x1+" "+y1;
+        upperright=x2+" "+y2;
+         bottomright=x2+" "+y1;
+           upperleft=x1+" "+y2;
+
+          if(!h.contains(bottomleft))
+          {
+              h.add(bottomleft);
+          }
+          else
+          {
+              h.remove(bottomleft);
+          }
+
+          if(!h.contains(upperright))
+          {
+              h.add(upperright);
+          }
+          else
+          {
+              h.remove(upperright);
+          }
+
+          if(!h.contains(bottomright))
+          {
+              h.add(bottomright);
+          }
+          else
+          {
+              h.remove(bottomright);
+          }
+
+          if(!h.contains(upperleft))
+          {
+              h.add(upperleft);
+          }
+          else
+          {
+              h.remove(upperleft);
+          }
+    }
+
+  String bl=minx1+" "+miny1;
+  String ur=maxx2+" "+maxy2;
+  String br=maxx2+" "+miny1;
+  String ul=minx1+" "+maxy2;
+  int totalarea=Math.abs(minx1-maxx2)*Math.abs(miny1-maxy2);
+
+if(totalarea!=area)
+return false;
+if(!(h.size()==4)||!h.contains(bl)||!h.contains(ur)||!h.contains(br)||!h.contains(ul))
+{
+    return false;
+}
+return true;
+
+    }
+}
+
+
+8) PROFITABLE PATH IN A TREE
+
+class Solution {
+
+    int dist[]=null;
+ int parent[]=null;
+  HashMap<Integer,ArrayList<Integer>> h=new HashMap<Integer,ArrayList<Integer>>();
+  int maxans=Integer.MIN_VALUE;
+  int ans=0;
+HashSet<Integer> visited=new HashSet<Integer>();
+    public int mostProfitablePath(int[][] edges, int bob, int[] amount) {
+
+// creating adjacency lists
+
+
+
+
+   for(int i=0;i<edges.length;i++)
+   {
+      int a=edges[i][0];
+      int b=edges[i][1];
+      if(!h.containsKey(a))
+      {
+          h.put(a,new ArrayList<Integer>());
+
+      }
+      if(!h.containsKey(b))
+      {
+          h.put(b,new ArrayList<Integer>());
+      }
+
+    h.get(a).add(b);
+    h.get(b).add(a);
+
+   }
+
+
+  int n=edges.length;
+  dist=new int[n+1];
+  parent=new int[n+1];
+  Arrays.fill(dist,-1);
+  Arrays.fill(parent ,-1);
+
+
+
+
+
+// we should find the distances
+    dfstofindParent(0,0,0);
+
+   int curr=bob;
+   int currdist=0;
+while(curr!=0)
+{
+   if(dist[curr]>currdist)
+   {
+       amount[curr]=0;
+   }
+ else if(dist[curr]==currdist)
+ {
+     amount[curr]=amount[curr]/2;
+ }
+ currdist++;
+ curr=parent[curr];
+}
+
+ //
+ dfs(0,amount);
+ return maxans;
+
+
+}
+
+public void dfs(int curr,int[] amount)
+{
+  visited.add(curr);
+   ans=ans+amount[curr];
+   int trap=0;
+   for(Integer i:h.get(curr))
+   {
+      if(visited.contains(i))
+      {
+          continue;
+      }
+
+      trap++;
+      dfs(i,amount);
+
+
+
+   }
+   if(trap==0)
+   {
+      maxans =Math.max(ans,maxans);
+   }
+
+
+ans=ans-amount[curr];
+
+
+}
+
+
+    public void dfstofindParent(int curr,int pa,int dis)
+    {
+   dist[curr]=dis;
+   parent[curr]=pa;
+
+for(Integer adj:h.get(curr))
+{
+
+if(adj==pa)
+continue;
+else
+{
+    dfstofindParent(adj,curr,dis+1);
+}
+
+}
+
+
+    }
+}
 
