@@ -115,3 +115,43 @@ while(start-1>=0&& nums[start-1]>min)
 return end-start+1;
     }
 }
+
+
+11) COMBINATION SUM 3
+
+class Solution {
+    public List<List<Integer>> combinationSum3(int k, int n) {
+        
+List<List<Integer>> res=new ArrayList();
+
+generatesubsets(1,9,new ArrayList<Integer>(), res,k,n);
+return res;
+
+
+    }
+    public void generatesubsets(int start,int end,ArrayList<Integer> al,List<List<Integer>> res,int k,int target)
+    {
+
+        if(al.size()>k)
+        {
+            return ;
+        }
+      if(target==0  &&al.size()==k )
+      {
+          res.add(new ArrayList<Integer>(al));
+          return ;
+      }
+
+for(int i=start;i<=end;i++)
+{
+
+   al.add(i);
+   generatesubsets(i+1,end,al, res,k,target-i);
+   al.remove(al.size()-1);
+
+
+}
+
+
+    }
+}
