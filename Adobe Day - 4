@@ -1,0 +1,63 @@
+13) Number of People Aware of a Secret
+
+
+class Solution {
+    public int peopleAwareOfSecret(int n, int delay, int forget) {
+        long mod=1000000007;
+        long dp[]=new long[n+1];
+        dp[0]=0l;
+        dp[1]=1l;
+       long noofpeoplesharingthesecret=0;
+      for(int  i=2;i<=n;i++)
+      {
+         long noofnewpersonsknowingthesceret=dp[Math.max(i-delay,0)];
+         long noofforgettingpeople=dp[Math.max(i-forget,0)];
+           noofpeoplesharingthesecret+= (noofnewpersonsknowingthesceret-noofforgettingpeople);
+           dp[i]=noofpeoplesharingthesecret%mod;
+      }
+
+    long ans=0;
+    for(int i=n-forget+1;i<=n;i++)
+    {
+        ans=ans+dp[i];
+        ans=ans%mod;
+    }
+
+      return(int) ans;
+
+    }
+}
+
+14)  Max matrix Sum
+
+
+class Solution {
+    public long maxMatrixSum(int[][] matrix) {
+         int count=0;
+         long sum=0;
+         long min=Long.MAX_VALUE;
+         for(int i=0;i<matrix.length;i++)
+         {
+           for(int j=0;j<matrix[i].length;j++)
+           {
+               if(matrix[i][j]<0)
+               count++;
+               long num=(long)Math.abs(matrix[i][j]);
+min=Math.min(num,min);
+      sum+=num;
+
+
+           }
+
+
+         }
+     if(count%2==0)
+     return sum;
+     return sum-2*(min);
+
+
+
+
+
+    }
+}
